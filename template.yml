@@ -1,0 +1,106 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  DeployId:
+    Type: String
+    Default: afsf34sfdg
+  SourceCodeBucket:
+    Type: String
+    Default: afsf34sfdg
+Resources:
+  HelloWorldLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      FunctionName: EducativeHelloWorld
+      Code:
+        S3Bucket:
+          Ref: SourceCodeBucket
+        S3Key: !Sub "${DeployId}.zip"
+      Runtime: nodejs16.x
+      Timeout: 3
+      MemorySize: 128
+  RestAPI:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+      Body:
+        openapi: "3.0.1"
+        info:
+          title: "EducativeRestAPI"
+          description: "Rest API for Educative API Gateway Course"
+          version: "2022-06-06T10:08:49Z"
+        paths:
+          /hello:
+            post:
+              responses:
+                "200":
+                  description: "200 response"
+                  content:
+                    application/json:
+                      schema:
+                        $ref: "#/components/schemas/Empty"
+              x-amazon-apigateway-integration:
+                type: "aws"
+                credentials: "arn:aws:iam::869871132949:role/EducativeLambdaRole"
+                httpMethod: "POST"
+                uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:869871132949:function:EducativeHelloWorld/invocations"
+                responses:
+                  default:
+                    statusCode: "200"
+                requestTemplates:
+                  application/json:
+                    "##  This template will pass through all parameters including path, querystring,\
+                    \ header, stage variables, and context through to the integration endpoint\
+                    \ via the body/payload\n#set($allParams = $input.params())\n{\n\"body\"\
+                    \ : $input.json('$'),\n\"params\" : {\n#foreach($type in $allParams.keySet())\n\
+                    \    #set($params = $allParams.get($type))\n\"$type\" : {\n    #foreach($paramName\
+                    \ in $params.keySet())\n    \"$paramName\" : \"$util.escapeJavaScript($params.get($paramName))\"\
+                    \n        #if($foreach.hasNext),#end\n    #end\n}\n    #if($foreach.hasNext),#end\n\
+                    #end\n},\n\"context\" : {\n    \"account-id\" : \"$context.identity.accountId\"\
+                    ,\n    \"api-id\" : \"$context.apiId\",\n    \"http-method\" : \"$context.httpMethod\"\
+                    ,\n    \"source-ip\" : \"$context.identity.sourceIp\"\n    }\n}\n"
+                passthroughBehavior: "when_no_templates"
+                contentHandling: "CONVERT_TO_TEXT"
+        components:
+          schemas:
+            Empty:
+              title: "Empty Schema"
+              type: "object"
+      Name: EducativeRestAPI
+      Description: "Rest API for Educative API Gateway Course"
+      Mode: overwrite
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: EducativeLambdaRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+                - apigateway.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: "/"
+      Policies:
+        - PolicyName: logs
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:*
+                Resource: arn:aws:logs:*:*:*
+        - PolicyName: lambda
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                Resource: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:EducativeHelloWorld"
