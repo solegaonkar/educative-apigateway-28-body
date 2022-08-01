@@ -59,8 +59,7 @@ Resources:
                     \    #set($params = $allParams.get($type))\n\"$type\" : {\n    #foreach($paramName\
                     \ in $params.keySet())\n    \"$paramName\" : \"$util.escapeJavaScript($params.get($paramName))\"\
                     \n        #if($foreach.hasNext),#end\n    #end\n}\n    #if($foreach.hasNext),#end\n\
-                    #end\n},\n\"context\" : {\n    \"account-id\" : \"$context.identity.accountId\"\
-                    ,\n    \"api-id\" : \"$context.apiId\",\n    \"http-method\" : \"$context.httpMethod\"\
+                    #end\n},\n\"context\" : {\n    \"api-id\" : \"$context.apiId\",\n    \"http-method\" : \"$context.httpMethod\"\
                     ,\n    \"source-ip\" : \"$context.identity.sourceIp\"\n    }\n}\n"
                 passthroughBehavior: "when_no_templates"
                 contentHandling: "CONVERT_TO_TEXT"
