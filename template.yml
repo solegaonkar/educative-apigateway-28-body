@@ -1,11 +1,3 @@
-/*
- * Filename: /home/ubuntu/wip/educative-apigateway-28-body/template.yml
- * Path: /home/ubuntu/wip/educative-apigateway-28-body
- * Created Date: Sunday, August 21st 2022, 12:38:23 pm
- * Author: Vikas K Solegaonkar
- * 
- * Copyright (c) 2022 Vikas K Solegaonkar
- */
 
 AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
@@ -15,6 +7,7 @@ Parameters:
   SourceCodeBucket:
     Type: String
     Default: afsf34sfdg
+Resources:
   RestAPI:
     Type: AWS::ApiGateway::RestApi
     Properties:
@@ -55,35 +48,3 @@ Parameters:
       Name: EducativeRestAPI
       Description: "Rest API for Educative API Gateway Course"
       Mode: overwrite
-  LambdaExecutionRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: EducativeLambdaRole
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - lambda.amazonaws.com
-                - apigateway.amazonaws.com
-            Action:
-              - sts:AssumeRole
-      Path: "/"
-      Policies:
-        - PolicyName: logs
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - logs:*
-                Resource: arn:aws:logs:*:*:*
-        - PolicyName: lambda
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - lambda:InvokeFunction
-                Resource: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:EducativeHelloWorld"
