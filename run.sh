@@ -34,16 +34,6 @@ apiId=`aws cloudformation list-stack-resources --stack-name EducativeCourseApiGa
 echo "API ID: $apiId"
 
 # -----------------------------------------------------------------
-# Deploy the API to a new Stage (We will discuss this in detail in a later chapter)
-# -----------------------------------------------------------------
-aws apigateway create-deployment --rest-api-id $apiId --stage-name v1 --description 'Deployed from CLI' 
-
-# -----------------------------------------------------------------
-# Give it some time to settle down
-# -----------------------------------------------------------------
-sleep 30
-
-# -----------------------------------------------------------------
 # This is the URL for the API we just created
 # -----------------------------------------------------------------
 url="https://${apiId}.execute-api.us-east-1.amazonaws.com/v1/whereami"
