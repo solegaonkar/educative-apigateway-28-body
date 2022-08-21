@@ -16,7 +16,7 @@ aws configure set region us-east-1
 # 3. Wait for some time till it is deleted completely then press 
 #    Enter to resume this script
 # -----------------------------------------------------------------
-pause
+read a
 
 # -----------------------------------------------------------------
 # With everything ready, we initiate the CloudFormation deployment.
