@@ -1,4 +1,3 @@
-
 AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
   DeployId:
@@ -48,3 +47,9 @@ Resources:
       Name: EducativeRestAPI
       Description: "Rest API for Educative API Gateway Course"
       Mode: overwrite
+  APIDeployment:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId:
+        Ref: RestAPI
+      StageName: v1
