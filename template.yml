@@ -15,20 +15,6 @@ Parameters:
   SourceCodeBucket:
     Type: String
     Default: afsf34sfdg
-Resources:
-  HelloWorldLambda:
-    Type: AWS::Lambda::Function
-    Properties:
-      Handler: index.handler
-      Role: !GetAtt LambdaExecutionRole.Arn
-      FunctionName: EducativeHelloWorld
-      Code:
-        S3Bucket:
-          Ref: SourceCodeBucket
-        S3Key: !Sub "${DeployId}.zip"
-      Runtime: nodejs16.x
-      Timeout: 3
-      MemorySize: 128
   RestAPI:
     Type: AWS::ApiGateway::RestApi
     Properties:

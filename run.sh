@@ -14,7 +14,6 @@ aws cloudformation deploy \
     --template-file template.yml \
     --stack-name EducativeCourseApiGateway \
     --capabilities CAPABILITY_NAMED_IAM \
-    --parameter-overrides DeployId="$RAND" SourceCodeBucket="educative.${bucket}" \
     --region us-east-1
 
 # -----------------------------------------------------------------
