@@ -30,7 +30,7 @@ aws cloudformation deploy \
 # -----------------------------------------------------------------
 # Get the API ID of the Rest API we just created.
 # -----------------------------------------------------------------
-apiId=`aws cloudformation list-stack-resources --stack-name EducativeCourseApiGateway | jq -r ".StackResourceSummaries[0].PhysicalResourceId"`
+apiId=`aws cloudformation list-stack-resources --stack-name EducativeCourseApiGateway | jq -r ".StackResourceSummaries[1].PhysicalResourceId"`
 echo "API ID: $apiId"
 
 # -----------------------------------------------------------------
