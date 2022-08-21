@@ -1,3 +1,12 @@
+/*
+ * Filename: /home/ubuntu/wip/educative-apigateway-28-body/template.yml
+ * Path: /home/ubuntu/wip/educative-apigateway-28-body
+ * Created Date: Sunday, August 21st 2022, 12:38:23 pm
+ * Author: Vikas K Solegaonkar
+ * 
+ * Copyright (c) 2022 Vikas K Solegaonkar
+ */
+
 AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
   DeployId:
@@ -33,7 +42,7 @@ Resources:
           description: "Rest API for Educative API Gateway Course"
           version: "2022-06-06T10:08:49Z"
         paths:
-          /hello:
+          /whereami:
             post:
               responses:
                 "200":
@@ -43,26 +52,15 @@ Resources:
                       schema:
                         $ref: "#/components/schemas/Empty"
               x-amazon-apigateway-integration:
-                type: "aws"
-                credentials: "arn:aws:iam::869871132949:role/EducativeLambdaRole"
                 httpMethod: "POST"
-                uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:869871132949:function:EducativeHelloWorld/invocations"
+                uri: "https://public.krazyminds.com/ipinfo"
                 responses:
                   default:
                     statusCode: "200"
                 requestTemplates:
-                  application/json:
-                    "##  This template will pass through all parameters including path, querystring,\
-                    \ header, stage variables, and context through to the integration endpoint\
-                    \ via the body/payload\n#set($allParams = $input.params())\n{\n\"body\"\
-                    \ : $input.json('$'),\n\"params\" : {\n#foreach($type in $allParams.keySet())\n\
-                    \    #set($params = $allParams.get($type))\n\"$type\" : {\n    #foreach($paramName\
-                    \ in $params.keySet())\n    \"$paramName\" : \"$util.escapeJavaScript($params.get($paramName))\"\
-                    \n        #if($foreach.hasNext),#end\n    #end\n}\n    #if($foreach.hasNext),#end\n\
-                    #end\n},\n\"context\" : {\n    \"api-id\" : \"$context.apiId\",\n    \"http-method\" : \"$context.httpMethod\"\
-                    ,\n    \"source-ip\" : \"$context.identity.sourceIp\"\n    }\n}\n"
+                  application/json: "{\n  \"ip\": \"$context.identity.sourceIp\"\n}"
                 passthroughBehavior: "when_no_templates"
-                contentHandling: "CONVERT_TO_TEXT"
+                type: "http"
         components:
           schemas:
             Empty:
